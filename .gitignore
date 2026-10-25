@@ -1,0 +1,30 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Docker / Container artifacts
+docker-compose.override.yml
+
+# Execution logs
+logs/
+*.log
+
+# Python / Virtual Environment
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Node / Frontend Build
+node_modules/
+dist/
+.vite/
+*.local

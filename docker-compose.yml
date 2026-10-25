@@ -1,0 +1,38 @@
+name: hyperlocal-marketplace
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hyperlocal-marketplace-db:16
+    container_name: hyperlocal-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres_dev_password_change_in_prod}
+      POSTGRES_DB: ${DB_NAME:-hyperlocal_marketplace}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-hyperlocal_marketplace}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - hyperlocal-network
+
+volumes:
+  postgres_data:
+    name: hyperlocal_postgres_data
+    driver: local
+
+networks:
+  hyperlocal-network:
+    name: hyperlocal_network
+    driver: bridge
